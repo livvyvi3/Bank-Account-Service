@@ -7,27 +7,37 @@ using System.Threading.Tasks;
 
 namespace Bank_Account_Service.Services
 {
-    internal class CurrentAccount : IAccountService
+    public class CurrentAccount : IAccountService
     {
-        private double newBalance;
-        private double balance;
-        const double maxOverdraft = 100000.00;
-        void IAccountService.Deposit(long accountId, double amountToDeposit)
+
+        private readonly ISystemDB _systemDB;
+        private const double maxOverdraft = 100000;
+        private double balanceAfterWithdrawal;
+
+        public CurrentAccount(ISystemDB systemDB)
         {
-            balance += amountToDeposit;
+            _systemDB = systemDB;
+        }
+        
+        public void Deposit(long accountId, double amountToDeposit)
+        {
+            _systemDB.getCurrentAccounts().Single(x => x.AccountID == accountId).Balance += amountToDeposit;
         }
 
-        void IAccountService.Withdraw(long accountId, double amountToWithdraw)
+
+        public void Withdraw(long accountId, double amountToWithdraw)
         {
-            if (balance > 0 && amountToWithdraw <= balance + maxOverdraft)
+            balanceAfterWithdrawal = _systemDB.getCurrentAccounts().Single(x => x.AccountID == accountId).Balance  - amountToWithdraw;
+            if (balanceAfterWithdrawal <= maxOverdraft) 
             {
-                balance -= amountToWithdraw;
-            }
-            throw new NotImplementedException();
+                
+                    _systemDB.getCurrentAccounts().Single(x => x.AccountID == accountId).Balance -= amountToWithdraw;
+                }
+               
+            else
+                Console.WriteLine("You have exceeded your overdraft limit");
         }
-        public static void openCurrentAccount(long accountId)
-        {
 
-        }
+        
     }
 }

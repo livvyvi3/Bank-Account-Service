@@ -8,8 +8,8 @@ namespace Bank_Account_Service.Interface
 {
     public interface IAccountService
     {
-        void Deposit(long accountId, double amountToDeposit);
-        void Withdraw(long accountId, double amountToWithdraw);
+        public void Deposit(long accountId, double amountToDeposit);
+        public void Withdraw(long accountId, double amountToWithdraw);
 
     }
 }

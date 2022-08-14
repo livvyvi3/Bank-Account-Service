@@ -9,22 +9,27 @@ namespace Bank_Account_Service.Services
 {
     public class SavingsAccount : IAccountService
     {
-        const double minBalance = 1000;
-        private double newBalance;
-        private double balance;
-        void IAccountService.Deposit(long accountId, double amountToDeposit)
+        private readonly ISystemDB _systemDB;
+
+        public SavingsAccount(ISystemDB systemDB)
         {
-            newBalance = balance + amountToDeposit;
-            throw new NotImplementedException();
+            _systemDB = systemDB;
+        }
+        public void Deposit(long accountId, double amountToDeposit)
+        {
+            _systemDB.getSavingsAccounts().Single(x => x.AccountId == accountId).Balance += amountToDeposit;
         }
 
 
-        void IAccountService.Withdraw(long accountId, double amountToWithdraw)
+        public void Withdraw(long accountId, double amountToWithdraw)
         {
-            if (balance - amountToWithdraw < minBalance)
-                throw new NotImplementedException();
+            if (_systemDB.getSavingsAccounts().Single(x => x.AccountId == accountId).Balance > amountToWithdraw)
+            {
+                _systemDB.getSavingsAccounts().Single(x => x.AccountId == accountId).Balance -= amountToWithdraw;
+            }
             else
-                newBalance = balance - amountToWithdraw;
+                Console.WriteLine("Insufficient balance");
+            
         }
     }
 }

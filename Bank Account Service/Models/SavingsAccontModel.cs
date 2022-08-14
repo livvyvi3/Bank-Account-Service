@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Bank_Account_Service.Models
 {
-    public class SavingsAccontModel
+    public class SavingsAccountModel
     {
-        public SavingsAccontModel(long accountId,  int balance)
+        public SavingsAccountModel(long accountId, double balance)
         {
             this.AccountId = accountId;
             this.Balance = balance;
         }
 
         public long AccountId { get; }
-        public int Balance { get; }
+        public double Balance { get; set; }
     }
 }
 
